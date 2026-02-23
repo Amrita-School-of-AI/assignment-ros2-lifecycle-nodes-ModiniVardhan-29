@@ -74,7 +74,7 @@ private:
 
   void publish_data()
   {
-    if (!publisher_->is_activated()) {
+    if (!publisher_ || !publisher_->is_activated()) {
       return;
     }
 
@@ -97,6 +97,7 @@ private:
   rclcpp::TimerBase::SharedPtr timer_;
 };
 
+
 // ================= MAIN =================
 int main(int argc, char ** argv)
 {
@@ -104,7 +105,8 @@ int main(int argc, char ** argv)
 
   auto node = std::make_shared<LifecycleSensor>();
 
-  rclcpp::spin(node);
+  // Required for ROS2 Jazzy lifecycle nodes
+  rclcpp::spin(node->get_node_base_interface());
 
   rclcpp::shutdown();
   return 0;
